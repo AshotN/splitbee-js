@@ -8,8 +8,8 @@ try {
 } catch (error) {
   console.log('no expo');
   console.log(error);
-  const { getDeviceInfo } = require('./native');
-  deviceInfo = getDeviceInfo;
+  // const { getDeviceInfo } = require('./native');
+  // deviceInfo = getDeviceInfo;
 }
 
 export const getDeviceInfo = deviceInfo;

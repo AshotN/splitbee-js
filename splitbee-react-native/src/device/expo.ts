@@ -1,5 +1,6 @@
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
+import * as Application from 'expo-application';
 
 const getDeviceType = (device: Device.DeviceType) => {
   switch (device) {
@@ -25,8 +26,8 @@ export const getDeviceInfo = async () => {
     client: {
       name: 'React Native',
       type: 'app',
-      version: Constants.nativeAppVersion,
-      build: Constants.nativeBuildVersion,
+      version: Application.nativeApplicationVersion,
+      build: Application.nativeBuildVersion,
     },
     device: {
       type: getDeviceType(await Device.getDeviceTypeAsync()),

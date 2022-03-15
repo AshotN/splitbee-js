@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import { analytics, JSONType, Response } from '@splitbee/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
