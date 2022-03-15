@@ -50,6 +50,7 @@
     "@react-native-async-storage/async-storage": ">=1.13.0",
     "@splitbee/core": "^0.2.7",
     "cross-fetch": "^3.0.5",
+    "expo-application": "^4.0.2",
     "tslib": "^2.1.0"
   }
 }
