@@ -8,7 +8,8 @@ import { getDeviceInfo } from './device';
 import { isDevice } from 'expo-device';
 
 const AsyncStorage: AsyncStorageStatic | null = (() => {
-  if (isDevice) return require('@react-native-async-storage/async-storage');
+  if (isDevice)
+    return require('@react-native-async-storage/async-storage').default;
   return null;
 })();
 

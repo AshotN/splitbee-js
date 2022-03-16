@@ -6,7 +6,7 @@ import { getDeviceInfo } from './device';
 import { isDevice } from 'expo-device';
 const AsyncStorage = (() => {
     if (isDevice)
-        return require('@react-native-async-storage/async-storage');
+        return require('@react-native-async-storage/async-storage').default;
     return null;
 })();
 const UID_KEY = 'splitbee_uid';
