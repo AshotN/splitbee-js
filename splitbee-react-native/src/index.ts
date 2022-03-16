@@ -97,6 +97,7 @@ const getContext = async () => ({
 });
 
 const splitbee = {
+  isEnabled: () => !!projectToken,
   init: (token: string) => {
     if (!isDevice) return false;
     projectToken = token;
