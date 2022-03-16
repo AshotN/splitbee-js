@@ -1,11 +1,16 @@
 import { useRef } from 'react';
-import { AppState, AppStateStatus } from 'react-native';
+import { AppState, AppStateStatus, AsyncStorageStatic } from 'react-native';
 import { analytics, JSONType, Response } from '@splitbee/core';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainerRef } from '@react-navigation/native';
 
 import { getActiveSeconds, resetTime } from './timer';
 import { getDeviceInfo } from './device';
+import { isDevice } from 'expo-device';
+
+const AsyncStorage: AsyncStorageStatic | null = (() => {
+  if (isDevice) return require('@react-native-async-storage/async-storage');
+  return null;
+})();
 
 const UID_KEY = 'splitbee_uid';
 const USERID_KEY = 'splitbee_userId';
@@ -16,15 +21,12 @@ let userId: string | undefined;
 let requestId: string | undefined;
 let lastPage: string | undefined;
 
-const generateUid = () =>
-  Math.random()
-    .toString(36)
-    .substring(7);
+const generateUid = () => Math.random().toString(36).substring(7);
 
 const loadUid = async () => {
-  uid = uid || (await AsyncStorage.getItem('splitbee_uid')) || undefined;
+  uid = uid || (await AsyncStorage?.getItem('splitbee_uid')) || undefined;
   userId =
-    userId || (await AsyncStorage.getItem('splitbee_userId')) || undefined;
+    userId || (await AsyncStorage?.getItem('splitbee_userId')) || undefined;
 };
 
 export const useTrackReactNavigation = (
@@ -82,7 +84,7 @@ const onChange = async (state: AppStateStatus) => {
 const processResponse = async (response: Response | undefined) => {
   if (response?.uid) {
     uid = response.uid;
-    await AsyncStorage.setItem(UID_KEY, response.uid);
+    await AsyncStorage?.setItem(UID_KEY, response.uid);
   }
 };
 
@@ -95,14 +97,16 @@ const getContext = async () => ({
 
 const splitbee = {
   init: (token: string) => {
+    if (!isDevice) return false;
     projectToken = token;
     loadUid();
     AppState.removeEventListener('change', onChange);
     AppState.addEventListener('change', onChange);
+    return true;
   },
   setUserId: (id: string) => {
     userId = id;
-    AsyncStorage.setItem(USERID_KEY, id)
+    AsyncStorage?.setItem(USERID_KEY, id)
       .then(() => {})
       .catch(() => {});
   },

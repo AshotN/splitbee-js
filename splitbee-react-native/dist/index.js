@@ -1,9 +1,14 @@
 import { useRef } from 'react';
 import { AppState } from 'react-native';
 import { analytics } from '@splitbee/core';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getActiveSeconds, resetTime } from './timer';
 import { getDeviceInfo } from './device';
+import { isDevice } from 'expo-device';
+const AsyncStorage = (() => {
+    if (isDevice)
+        return require('@react-native-async-storage/async-storage');
+    return null;
+})();
 const UID_KEY = 'splitbee_uid';
 const USERID_KEY = 'splitbee_userId';
 let projectToken;
@@ -11,13 +16,11 @@ let uid;
 let userId;
 let requestId;
 let lastPage;
-const generateUid = () => Math.random()
-    .toString(36)
-    .substring(7);
+const generateUid = () => Math.random().toString(36).substring(7);
 const loadUid = async () => {
-    uid = uid || (await AsyncStorage.getItem('splitbee_uid')) || undefined;
+    uid = uid || (await AsyncStorage?.getItem('splitbee_uid')) || undefined;
     userId =
-        userId || (await AsyncStorage.getItem('splitbee_userId')) || undefined;
+        userId || (await AsyncStorage?.getItem('splitbee_userId')) || undefined;
 };
 export const useTrackReactNavigation = (ref) => {
     const navigationRef = useRef(null);
@@ -64,7 +67,7 @@ const onChange = async (state) => {
 const processResponse = async (response) => {
     if (response?.uid) {
         uid = response.uid;
-        await AsyncStorage.setItem(UID_KEY, response.uid);
+        await AsyncStorage?.setItem(UID_KEY, response.uid);
     }
 };
 const getContext = async () => ({
@@ -75,14 +78,17 @@ const getContext = async () => ({
 });
 const splitbee = {
     init: (token) => {
+        if (!isDevice)
+            return false;
         projectToken = token;
         loadUid();
         AppState.removeEventListener('change', onChange);
         AppState.addEventListener('change', onChange);
+        return true;
     },
     setUserId: (id) => {
         userId = id;
-        AsyncStorage.setItem(USERID_KEY, id)
+        AsyncStorage?.setItem(USERID_KEY, id)
             .then(() => { })
             .catch(() => { });
     },

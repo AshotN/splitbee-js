@@ -6,7 +6,7 @@ export declare const useTrackReactNavigation: (ref?: import("react").MutableRefO
     onStateChange: () => void;
 }, React.MutableRefObject<NavigationContainerRef | null>];
 declare const splitbee: {
-    init: (token: string) => void;
+    init: (token: string) => boolean;
     setUserId: (id: string) => void;
     screen: (page: string) => Promise<void>;
     track: (event: string, data?: any) => Promise<void>;
